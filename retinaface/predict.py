@@ -24,9 +24,9 @@ class RetinaFace:
         inputs = keras.Input(shape=(None, None, 3))
         self.retinaface = retinaface_net(inputs=inputs,
                                          training=False)
-        self.retinaface.load_weights('./model_weights/retinaface_resnet50.h5', by_name=True)
+        self.retinaface.load_weights('../retinaface/model_weights/retinaface_resnet50.h5', by_name=True)
 
-    def predict(self, image):
+    def predict(self, image, visualize=True):
 
         height = image.shape[0]
         width = image.shape[1]
@@ -64,7 +64,7 @@ class RetinaFace:
                                          score_thres=self.score_thres, iou_thres=self.iou_thres)
 
         # draw faces in original image
-        if len(scores) > 0:
+        if len(scores) > 0 and visualize:
             for i, score in enumerate(scores):
                 box = regression[i]
                 point = points[i]
@@ -91,9 +91,11 @@ class RetinaFace:
                                radius=2,
                                color=(0, 255, 255),
                                thickness=-1)
-        cv2.imwrite('img/techi_res.jpg', img_copy)
-        cv2.imshow('result', img_copy)
-        cv2.waitKey(0)
+            cv2.imwrite('img/techi_res.jpg', img_copy)
+            cv2.imshow('result', img_copy)
+            cv2.waitKey(0)
+
+        return regression, points
 
 
 if __name__ == '__main__':
