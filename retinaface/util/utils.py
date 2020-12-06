@@ -87,8 +87,9 @@ def generate_anchors(height, width):
         for j in range(len(x)):
             for shape in shapes:
                 # normalize
-                cx = (x[j] + 0.5) / w
-                cy = (y[j] + 0.5) / h
+                # TODO: use this fuction. Don't use (x[j] + 0.5) / w
+                cx = (x[j] + 0.5) * STEPS[i] / width
+                cy = (y[j] + 0.5) * STEPS[i] / height
                 aw = shape / width
                 ah = shape / height
                 anchors.append([cx, cy, aw, ah])
@@ -98,8 +99,59 @@ def generate_anchors(height, width):
     return anchors
 
 
-def nms(scores, bboxes):
-    pass
+def nms(scores, bboxes, landmarks, score_thres=0.4, iou_thres=0.45):
+    """non max suppression
+
+    Args:
+        scores:      (num,)
+        bboxes:      (num, 4)
+        score_thres: a scalar
+        iou_thres:   a scalar
+        landmarks:   (num, 10)
+
+    Returns:
+        picked
+
+    """
+    positive = scores > score_thres  # boolean
+    scores = scores[positive]
+    bboxes = bboxes[positive]
+    landmarks = landmarks[positive]
+
+    # sort scores
+    scores_sorted = np.argsort(scores)  # (num,)
+    bboxes_sorted = bboxes[scores_sorted]
+
+    picked = []
+    while len(scores_sorted) > 0:
+        picked.append(scores_sorted[-1])
+        ious = iou(bboxes_sorted[:-1], bboxes_sorted[-1])
+        remain = np.argwhere(ious < iou_thres)[..., 0]
+        scores_sorted = scores_sorted[remain]
+        bboxes_sorted = bboxes_sorted[remain]
+
+    return scores[picked], bboxes[picked], landmarks[picked]
+
+
+def iou(boxes, box):
+    boxes_min = boxes[..., :2]  # (num, 2)
+    boxes_max = boxes[..., 2:4]
+    box_min = box[:2]
+    box_max = box[2:]
+
+    insert_min = np.maximum(box_min, boxes_min)
+    insert_max = np.minimum(box_max, boxes_max)
+    insert_wh = np.maximum(0, insert_max - insert_min)
+    insert_area = insert_wh[..., 0] * insert_wh[..., 1]
+
+    box_wh = box_max - box_min
+    box_area = box_wh[0] * box_wh[1]
+    boxes_wh = boxes_max - boxes_min
+    boxes_area = boxes_wh[..., 0] * boxes_wh[..., 1]
+
+    ious = insert_area / (box_area + boxes_area - insert_area)
+
+    return ious
 
 
 if __name__ == '__main__':
