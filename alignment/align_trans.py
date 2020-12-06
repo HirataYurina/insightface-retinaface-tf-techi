@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 24 15:43:29 2017
-@author: zhaoy
-"""
+# -*- coding:utf-8 -*-
+# author:平手友梨奈ii
+# e-mail:1353593259@qq.com
+# datetime:1993/12/01
+# filename:database.py
+# software: PyCharm
+
+
 import numpy as np
 import cv2
-
-# from scipy.linalg import lstsq
-# from scipy.ndimage import geometric_transform  # , map_coordinates
-
 from alignment.matlab_cp2tform import get_similarity_transform_for_cv2
 
 # reference facial points, a list of coordinates (x,y)

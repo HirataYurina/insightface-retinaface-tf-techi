@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 11 06:54:28 2017
-
-@author: zhaoyafei
-"""
+# -*- coding:utf-8 -*-
+# author:平手友梨奈ii
+# e-mail:1353593259@qq.com
+# datetime:1993/12/01
+# filename:database.py
+# software: PyCharm
 
 import numpy as np
 from numpy.linalg import inv, norm, lstsq
