@@ -41,7 +41,7 @@ class FaceDataBase:
                 image = cv2.imread(os.path.join(DB_PATH, img))
 
                 if image.shape[0] != 112 or image.shape[1] != 112:
-                    assert ValueError, "image shape is not (112, 112)"
+                    raise ValueError("image shape is not (112, 112)")
 
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 image = preprocess(image)
