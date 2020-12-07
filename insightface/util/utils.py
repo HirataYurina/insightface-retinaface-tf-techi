@@ -49,6 +49,6 @@ def get_similar_face(distances, dis_thres):
     similar_dis = distances[similar_face]
 
     if similar_dis < dis_thres:
-        return similar_face
+        return similar_face, similar_dis
     else:
-        return []
+        return [], similar_dis

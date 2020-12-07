@@ -1,4 +1,6 @@
 /retinaface/model_weights/
 /insightface/face_db/face_database
 /.idea
-/insightface/model_weights/
+/insightface/model_weights
+/insightface/video
+/insightface/img
